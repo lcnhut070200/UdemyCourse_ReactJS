@@ -1,9 +1,9 @@
-import Button from '@mui/material/Button';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from '@material-ui/core';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { decrease, increase } from './counterSlice';
 import styles from './styles.module.css';
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles({
   root: {

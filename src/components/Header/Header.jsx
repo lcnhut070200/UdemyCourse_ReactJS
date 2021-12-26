@@ -1,49 +1,90 @@
-import StoreIcon from '@mui/icons-material/Store';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import TextField from '@mui/material/TextField';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import { makeStyles } from '@mui/styles';
+import { AppBar, Box, IconButton, Menu, MenuItem } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core/styles';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
 import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import Register from '../../features/Auth/components/Register/Register';
+import StoreMallDirectoryIcon from '@material-ui/icons/StoreMallDirectory';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+import CloseIcon from '@material-ui/icons/Close';
+import Login from '../../features/Auth/components/Login/Login';
+import { useDispatch, useSelector } from 'react-redux';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import { logout } from '../../features/Auth/userSlice';
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+    position: 'relative',
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+  },
   link: {
     textDecoration: 'none',
     color: '#fff',
   },
+  closeButton: {
+    position: 'absolute',
+    top: theme.spacing(1),
+    right: theme.spacing(1),
+    color: theme.palette.grey[500],
+    zIndex: 10,
+  },
 }));
+
+const MODE = {
+  LOGIN: 'login',
+  REGISTER: 'register',
+};
 
 export default function Header() {
   const classes = useStyles();
 
+  const loggedInUser = useSelector((state) => state.user.current);
+  const isLoggedIn = !!loggedInUser.id;
+  const dispatch = useDispatch();
+
+  const [mode, setMode] = useState(MODE.LOGIN);
   const [open, setOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClickOpen = () => {
     setOpen(true);
   };
 
-  const handleClose = () => {
+  const handleClose = (event, reason) => {
+    if (reason === 'backdropClick') {
+      return false;
+    }
     setOpen(false);
   };
 
-  const handleBackDropClick = () => {
-    setOpen(true);
+  const handleUserClick = (e) => {
+    setAnchorEl(e.currentTarget);
+  };
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogoutClick = () => {
+    const action = logout();
+    dispatch(action);
   };
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <StoreIcon sx={{ mr: 2 }} />
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <StoreMallDirectoryIcon edge="start" className={classes.menuButton} color="inherit" />
+          <Typography variant="h6" className={classes.title}>
             <Link className={classes.link} to="/">
               Empty Store
             </Link>
@@ -55,29 +96,59 @@ export default function Header() {
           <NavLink className={classes.link} to="/albums">
             <Button color="inherit">Album List</Button>
           </NavLink>
-
-          <Button color="inherit" onClick={handleClickOpen}>
-            Register
-          </Button>
+          {!isLoggedIn ? (
+            <Button color="inherit" onClick={handleClickOpen}>
+              Login
+            </Button>
+          ) : (
+            <IconButton color="inherit" onClick={handleUserClick}>
+              <AccountCircleIcon />
+            </IconButton>
+          )}
         </Toolbar>
       </AppBar>
 
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        disableEscapeKeyDown
-        onBackdropClick={handleBackDropClick}
+      <Menu
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleCloseMenu}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        getContentAnchorEl={null}
       >
-        <DialogContent>
-          {/* <DialogContentText> */}
-          <Register />
-          {/* </DialogContentText> */}
-        </DialogContent>
+        <MenuItem onClick={handleCloseMenu}>My account</MenuItem>
+        <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
+      </Menu>
 
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-        </DialogActions>
+      <Dialog open={open} onClose={handleClose} disableEscapeKeyDown>
+        <IconButton className={classes.closeButton} onClick={handleClose}>
+          <CloseIcon></CloseIcon>
+        </IconButton>
+        <DialogContent>
+          {mode === MODE.REGISTER ? (
+            <>
+              <Register closeDialog={handleClose} />
+              <Box textAlign="center" onClick={() => setMode(MODE.LOGIN)}>
+                <Button color="primary">Already have an account, Login here</Button>
+              </Box>
+            </>
+          ) : (
+            <>
+              <Login closeDialog={handleClose} />
+              <Box textAlign="center" onClick={() => setMode(MODE.REGISTER)}>
+                <Button color="primary">Don't have an account, Register here</Button>
+              </Box>
+            </>
+          )}
+        </DialogContent>
       </Dialog>
-    </Box>
+    </div>
   );
 }

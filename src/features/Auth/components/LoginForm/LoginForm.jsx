@@ -32,43 +32,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-RegisterForm.propTypes = {
+LoginForm.propTypes = {
   onSubmit: PropTypes.func,
 };
 
-function RegisterForm(props) {
+function LoginForm(props) {
   const classes = useStyles();
 
   const schema = yup.object({
-    fullName: yup
+    identifier: yup
       .string()
-      .required('Please enter your full name.')
-      .test('Should has at least two words', 'Please enter at least two words', (value) => {
-        return value.split(' ').length >= 2;
-      }),
-    email: yup.string().required('Please enter your email.').email('Please enter a valid email'),
-    password: yup
-      .string()
-      .required('Please enter password')
-      .min(6, 'Please enter at least 6 charracters'),
-    retypePassword: yup
-      .string()
-      .required('Please retype password')
-      .oneOf([yup.ref('password')], 'Password dose not match'),
+      .required('Please enter your email.')
+      .email('Please enter a valid email'),
+    password: yup.string().required('Please enter password'),
   });
 
   const form = useForm({
     defaultValues: {
-      fullName: '',
-      email: '',
+      identifier: '',
       password: '',
-      retypePassword: '',
     },
     resolver: yupResolver(schema),
   });
 
   const handleSubmit = async (values) => {
-    // console.log('Todo form: ', values);
     const { onSubmit } = props;
     if (onSubmit) {
       await onSubmit(values);
@@ -85,13 +72,11 @@ function RegisterForm(props) {
         <LockOutlined />
       </Avatar>
       <Typography component="h3" variant="h5" className={classes.title}>
-        Create An Account
+        Sign In
       </Typography>
       <form onSubmit={form.handleSubmit(handleSubmit)}>
-        <InputField name="fullName" label="Full Name" form={form} />
-        <InputField name="email" label="Email" form={form} />
+        <InputField name="identifier" label="Email" form={form} />
         <PasswordField name="password" label="Password" form={form} />
-        <PasswordField name="retypePassword" label="Retype Password" form={form} />
         <Button
           disabled={isSubmitting}
           type="submit"
@@ -101,11 +86,11 @@ function RegisterForm(props) {
           className={classes.submitButton}
           size="large"
         >
-          Create an account
+          Sign In
         </Button>
       </form>
     </div>
   );
 }
 
-export default RegisterForm;
+export default LoginForm;

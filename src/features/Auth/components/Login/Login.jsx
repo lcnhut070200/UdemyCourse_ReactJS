@@ -1,25 +1,22 @@
 import { unwrapResult } from '@reduxjs/toolkit';
-import React from 'react';
-import { useDispatch } from 'react-redux';
-import { register } from '../../userSlice';
-import RegisterForm from '../RegisterForm/RegisterForm';
 import { useSnackbar } from 'notistack';
 import PropTypes from 'prop-types';
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import { login } from '../../userSlice';
+import LoginForm from '../LoginForm/LoginForm';
 
-Register.propTypes = {
+Login.propTypes = {
   closeDialog: PropTypes.func,
 };
 
-function Register(props) {
+function Login(props) {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
   const handleSubmit = async (values) => {
     try {
-      // auto set username = email
-      values.username = values.email;
-
-      const action = register(values);
+      const action = login(values);
       const resultAction = await dispatch(action);
       const user = unwrapResult(resultAction);
 
@@ -30,18 +27,17 @@ function Register(props) {
       }
 
       // do something here on register successfully
-      console.log('Register success ', user);
-      enqueueSnackbar('Register successfully!!! ', { variant: 'success' });
+      console.log('Login success ', user);
     } catch (error) {
-      console.log('Fail to register', error);
+      console.log('Fail to Login', error);
       enqueueSnackbar(error.message, { variant: 'error' });
     }
   };
   return (
     <div>
-      <RegisterForm onSubmit={handleSubmit} />
+      <LoginForm onSubmit={handleSubmit} />
     </div>
   );
 }
 
-export default Register;
+export default Login;
