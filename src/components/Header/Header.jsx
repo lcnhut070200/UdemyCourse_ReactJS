@@ -1,19 +1,18 @@
 import { AppBar, Box, IconButton, Menu, MenuItem } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
 import { makeStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import React, { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
-import Register from '../../features/Auth/components/Register/Register';
-import StoreMallDirectoryIcon from '@material-ui/icons/StoreMallDirectory';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
-import CloseIcon from '@material-ui/icons/Close';
-import Login from '../../features/Auth/components/Login/Login';
-import { useDispatch, useSelector } from 'react-redux';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import CloseIcon from '@material-ui/icons/Close';
+import StoreMallDirectoryIcon from '@material-ui/icons/StoreMallDirectory';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, NavLink } from 'react-router-dom';
+import Login from '../../features/Auth/components/Login/Login';
+import Register from '../../features/Auth/components/Register/Register';
 import { logout } from '../../features/Auth/userSlice';
 
 const useStyles = makeStyles((theme) => ({
@@ -96,6 +95,7 @@ export default function Header() {
           <NavLink className={classes.link} to="/albums">
             <Button color="inherit">Album List</Button>
           </NavLink>
+
           {!isLoggedIn ? (
             <Button color="inherit" onClick={handleClickOpen}>
               Login
