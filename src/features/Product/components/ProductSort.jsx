@@ -19,9 +19,9 @@ function ProductSort({ currentSort, onChange }) {
       onChange={handleSortChange}
       aria-label="disabled tabs example"
     >
-      <Tab label="newest" value="updated_at:DESC"></Tab>
-      <Tab label="low to high" value="salePrice:ASC"></Tab>
-      <Tab label="high to low" value="salePrice:DESC"></Tab>
+      <Tab label="mới nhất" value="updated_at:DESC"></Tab>
+      <Tab label="giá thấp đến cao" value="salePrice:ASC"></Tab>
+      <Tab label="giá cao đến thấp" value="salePrice:DESC"></Tab>
     </Tabs>
   );
 }
