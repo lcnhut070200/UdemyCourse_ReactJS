@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import productApi from '../../../api/productApi';
 import ProductList from '../components/ProductList';
 import ProductSkeletonList from '../components/ProductSkeletonList';
+import ProductSort from '../components/ProductSort';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -21,6 +22,9 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '16px',
     paddingBottom: '16px',
   },
+  sortTabs: {
+    borderBottom: '1px solid #ccc',
+  },
 }));
 
 function ListPage(props) {
@@ -32,7 +36,7 @@ function ListPage(props) {
     total: 10,
     page: 1,
   });
-  const [filters, setFilters] = useState({ _page: 1, _limit: 12 });
+  const [filters, setFilters] = useState({ _page: 1, _limit: 12, _sort: 'updated_at:DESC' });
 
   useEffect(() => {
     (async () => {
@@ -56,6 +60,13 @@ function ListPage(props) {
     }));
   };
 
+  const handleSortChange = (newSortValue) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      _sort: newSortValue,
+    }));
+  };
+
   return (
     <Box>
       <Container>
@@ -65,6 +76,9 @@ function ListPage(props) {
           </Grid>
           <Grid item className={classes.right}>
             <Paper elevation={0}>
+              <Box className={classes.sortTabs}>
+                <ProductSort currentSort={filters._sort} onChange={handleSortChange} />
+              </Box>
               {loading ? <ProductSkeletonList length={12} /> : <ProductList data={productList} />}
               <Box className={classes.pagination}>
                 <Pagination
