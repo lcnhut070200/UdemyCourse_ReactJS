@@ -16,6 +16,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.24.0",
     "classnames": "^2.3.1",
+    "dompurify": "^2.3.4",
     "node-sass": "^7.0.0",
     "notistack": "^1.0.10",
     "query-string": "^7.0.1",
