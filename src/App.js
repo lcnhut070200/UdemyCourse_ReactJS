@@ -4,6 +4,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import Header from './components/Header/Header';
 import NotFound from './components/NotFount/NotFound';
 import AlbumFeature from './features/Album/index.';
+import CartFeature from './features/Cart/CartFeature';
 import Counter from './features/Counter/Counter';
 import ProductFeature from './features/Product/ProductFeature';
 import TodoFeature from './features/Todo';
@@ -21,6 +22,7 @@ function App() {
         <Route path="/todos" component={TodoFeature} />
         <Route path="/albums" component={AlbumFeature} />
         <Route path="/products" component={ProductFeature} />
+        <Route path="/cart" component={CartFeature} />
 
         <Route component={NotFound} />
       </Switch>

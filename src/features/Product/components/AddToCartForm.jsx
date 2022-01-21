@@ -16,7 +16,8 @@ function AddToCartForm({ onSubmit = null }) {
       .number()
       .typeError('Quantity must be a number')
       .required('Please enter quanity')
-      .min(1, 'Please enter at least 1'),
+      .min(1, 'Please enter at least 1')
+      .max(99, 'Plase enter maximum 99'),
   });
 
   const form = useForm({

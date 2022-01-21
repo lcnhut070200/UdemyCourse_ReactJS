@@ -1,4 +1,4 @@
-import { AppBar, Box, IconButton, Menu, MenuItem } from '@material-ui/core';
+import { AppBar, Badge, Box, IconButton, Menu, MenuItem } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -10,10 +10,12 @@ import CloseIcon from '@material-ui/icons/Close';
 import StoreMallDirectoryIcon from '@material-ui/icons/StoreMallDirectory';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useHistory } from 'react-router-dom';
 import Login from '../../features/Auth/components/Login/Login';
 import Register from '../../features/Auth/components/Register/Register';
 import { logout } from '../../features/Auth/userSlice';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import { cartItemsCountSelector } from '../../features/Cart/selectors';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,10 +48,11 @@ const MODE = {
 
 export default function Header() {
   const classes = useStyles();
-
+  const cartItemsCount = useSelector(cartItemsCountSelector);
   const loggedInUser = useSelector((state) => state.user.current);
   const isLoggedIn = !!loggedInUser.id;
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const [mode, setMode] = useState(MODE.LOGIN);
   const [open, setOpen] = useState(false);
@@ -76,6 +79,10 @@ export default function Header() {
   const handleLogoutClick = () => {
     const action = logout();
     dispatch(action);
+  };
+
+  const handleCartClick = () => {
+    history.push('/cart');
   };
 
   return (
@@ -108,6 +115,12 @@ export default function Header() {
               <AccountCircleIcon />
             </IconButton>
           )}
+
+          <IconButton color="inherit">
+            <Badge badgeContent={cartItemsCount} color="secondary" onClick={handleCartClick}>
+              <ShoppingCartIcon />
+            </Badge>
+          </IconButton>
         </Toolbar>
       </AppBar>
 
